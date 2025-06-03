@@ -1,6 +1,5 @@
 package com.tramis.qpa.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,12 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.tramis.qpa.utils.CameraMoveRequest
 import com.tramis.qpa.utils.SimpleMapWithSalas
 import com.tramis.qpa.viewmodel.SharedViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 
@@ -29,7 +26,6 @@ fun MapaSalasScreen(
     onEntrar: (String, Map<String, Any>) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
-    val sharedViewModel: SharedViewModel = viewModel()
     var grupoSeleccionado by remember { mutableStateOf<List<Pair<String, Map<String, Any>>>?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
