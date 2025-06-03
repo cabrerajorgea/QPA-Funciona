@@ -71,7 +71,7 @@ fun ChatScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate("chatList")
+                        navController.navigateUp()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
 
