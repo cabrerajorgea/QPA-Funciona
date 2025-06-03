@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseUser
 import com.tramis.qpa.utils.CameraMoveRequest
@@ -23,9 +22,9 @@ import com.tramis.qpa.viewmodel.SharedViewModel
 fun HomeScreenQPA(
     user: FirebaseUser?,
     navController: NavController,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
-    val sharedViewModel: SharedViewModel = viewModel()
     var selectedTab by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
