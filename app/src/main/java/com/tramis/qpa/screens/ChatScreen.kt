@@ -20,14 +20,14 @@ import com.tramis.qpa.components.*
 import com.tramis.qpa.utils.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tramis.qpa.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     salaId: String,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedViewModel: SharedViewModel
 ) {
     val mensajes = useMensajesListener(salaId)
     val usuarios = useUsuariosEnSalaListener(salaId)
@@ -40,7 +40,6 @@ fun ChatScreen(
         LatLng(it.latitude, it.longitude)
     } ?: LatLng(0.0, 0.0)
 
-    val sharedViewModel: SharedViewModel = viewModel()
     var salaRegistrada by remember { mutableStateOf(false) }
 
     LaunchedEffect(sala) {
@@ -71,7 +70,7 @@ fun ChatScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate("chatList")
+                        navController.popBackStack()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
 

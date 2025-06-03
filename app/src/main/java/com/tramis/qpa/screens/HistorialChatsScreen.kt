@@ -12,14 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.tramis.qpa.viewmodel.SharedViewModel
 
 @Composable
 fun HistorialChatsScreen(
     navController: NavController,
-    sharedViewModel: SharedViewModel = viewModel()
+    sharedViewModel: SharedViewModel
 ) {
     val historial by sharedViewModel.salasAccedidas.collectAsState()
     var textoBusqueda by remember { mutableStateOf("") }

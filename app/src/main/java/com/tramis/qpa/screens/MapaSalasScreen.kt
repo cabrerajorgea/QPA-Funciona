@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.tramis.qpa.utils.CameraMoveRequest
 import com.tramis.qpa.utils.SimpleMapWithSalas
 import com.tramis.qpa.viewmodel.SharedViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 
@@ -29,7 +28,6 @@ fun MapaSalasScreen(
     onEntrar: (String, Map<String, Any>) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
-    val sharedViewModel: SharedViewModel = viewModel()
     var grupoSeleccionado by remember { mutableStateOf<List<Pair<String, Map<String, Any>>>?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -16,6 +18,7 @@ import com.tramis.qpa.screens.CrearNuevaSalaScreen
 import com.tramis.qpa.screens.HistorialChatsScreen
 import com.tramis.qpa.screens.HomeScreenQPA
 import com.tramis.qpa.ui.theme.QPATheme
+import com.tramis.qpa.viewmodel.SharedViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +34,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppScaffold(navController: NavHostController) {
+    val activity = LocalContext.current as ComponentActivity
+    val sharedViewModel: SharedViewModel = viewModel(viewModelStoreOwner = activity)
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -65,7 +71,8 @@ fun AppScaffold(navController: NavHostController) {
                 HomeScreenQPA(
                     user = null,
                     navController = navController,
-                    onSignOut = {}
+                    onSignOut = {},
+                    sharedViewModel = sharedViewModel
                 )
             }
             composable("crear") {
@@ -76,13 +83,17 @@ fun AppScaffold(navController: NavHostController) {
                 )
             }
             composable("chatList") {
-                HistorialChatsScreen(navController = navController)
+                HistorialChatsScreen(
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
+                )
             }
             composable("chat/{salaId}") { backStackEntry ->
                 val salaId = backStackEntry.arguments?.getString("salaId") ?: return@composable
                 ChatScreen(
                     salaId = salaId,
-                    navController = navController
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
                 )
             }
             composable("perfil") {
