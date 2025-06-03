@@ -17,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QPA"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAieXEcrI68hemWqD7_8KlWSqjtj6XPfno"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
