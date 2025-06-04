@@ -9,4 +9,6 @@ This project requires a `google-services.json` file for Firebase and Google serv
 3. The file is ignored by Git, so you must provide it yourself when setting up the project.
 
 
-The Google Maps API key is read from this file as well, so make sure the key is correctly configured in your Firebase project.
+The project also needs a Google Maps API key. Configure it by creating a `local.properties` file in the project root with the line `MAPS_API_KEY=YOUR_KEY`. The key is read at build time by the secrets Gradle plugin and injected into `AndroidManifest.xml`.
+
+An example `secrets.defaults.properties` is included with a placeholder value. Replace it with your real key (or provide a `local.properties` file) before building the app.
