@@ -69,7 +69,11 @@ fun ChatScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
+//<<<<<<< codex/corregir-salas-no-guardadas-en-chat
+                        navController.popBackStack()
+//=======
                         navController.navigateUp()
+//>>>>>>> master
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
 
