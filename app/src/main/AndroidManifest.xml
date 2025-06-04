@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QPA"
         tools:targetApi="31">
+        <!-- API key for Google Maps is provided via the secrets Gradle plugin -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
