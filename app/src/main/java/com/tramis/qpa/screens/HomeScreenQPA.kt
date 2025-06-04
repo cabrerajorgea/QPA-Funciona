@@ -1,6 +1,5 @@
 package com.tramis.qpa.screens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,13 +8,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseUser
-import com.tramis.qpa.utils.CameraMoveRequest
-import com.tramis.qpa.utils.getCurrentLocation
-import com.tramis.qpa.utils.useSalasListener
+import com.tramis.qpa.utils.*
 import com.tramis.qpa.viewmodel.SharedViewModel
 
 @Composable
@@ -26,19 +24,36 @@ fun HomeScreenQPA(
     sharedViewModel: SharedViewModel
 ) {
     var selectedTab by remember { mutableStateOf(0) }
+    var permisoOtorgado by remember { mutableStateOf(false) }
+
+    SolicitarPermisoUbicacion {
+        permisoOtorgado = true
+    }
+
+    if (!permisoOtorgado) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    val ubicacionUsuario = getCurrentLocation()
+    if (ubicacionUsuario == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     LaunchedEffect(Unit) {
         selectedTab = 0
     }
 
     val salas = useSalasListener()
-    val ubicacionUsuario = getCurrentLocation()
     var moveCounter by remember { mutableStateOf(0) }
     val cameraMoveRequest = remember(ubicacionUsuario) {
-        ubicacionUsuario?.let {
-            moveCounter++
-            CameraMoveRequest(it, moveCounter)
-        }
+        moveCounter++
+        CameraMoveRequest(ubicacionUsuario, moveCounter)
     }
 
     var selectedSalaId by remember { mutableStateOf<String?>(null) }
@@ -107,9 +122,13 @@ fun HomeScreenQPA(
                         }
                     }
                 }
-                1 -> CrearNuevaSalaScreen(user = user, onSalaSeleccionada = { id, data ->
-                    navController.navigate("chat/$id")
-                }, onSignOut = onSignOut)
+                1 -> CrearNuevaSalaScreen(
+                    user = user,
+                    onSalaSeleccionada = { id, data ->
+                        navController.navigate("chat/$id")
+                    },
+                    onSignOut = onSignOut
+                )
                 2 -> Text("Mis chats")
                 3 -> Text("Perfil y ajustes")
             }

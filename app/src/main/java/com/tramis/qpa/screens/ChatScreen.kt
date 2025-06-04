@@ -35,10 +35,6 @@ fun ChatScreen(
     val usuario = FirebaseAuth.getInstance().currentUser
     var mensaje by remember { mutableStateOf(TextFieldValue("")) }
 
-    val centroSala = (sala?.get("location") as? GeoPoint)?.let {
-        LatLng(it.latitude, it.longitude)
-    } ?: LatLng(0.0, 0.0)
-
     var salaRegistrada by remember { mutableStateOf(false) }
 
     LaunchedEffect(sala) {
@@ -47,6 +43,16 @@ fun ChatScreen(
             salaRegistrada = true
         }
     }
+
+    if (sala == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    val geo = sala["location"] as? GeoPoint
+    val centroSala = geo?.let { LatLng(it.latitude, it.longitude) } ?: LatLng(0.0, 0.0)
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Mapa de fondo atenuado
@@ -65,18 +71,13 @@ fun ChatScreen(
             // Top bar
             TopAppBar(
                 title = {
-                    Text(text = sala?.get("name") as? String ?: "Sala")
+                    Text(text = sala["name"] as? String ?: "Sala")
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-//<<<<<<< codex/corregir-salas-no-guardadas-en-chat
-                        navController.popBackStack()
-//=======
                         navController.navigateUp()
-//>>>>>>> master
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-
                     }
                 }
             )
