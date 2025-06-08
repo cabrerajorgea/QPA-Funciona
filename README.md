@@ -1,14 +1,73 @@
-# QPA
+# QPA — Qué Pasa Acá?
 
-This project requires a `google-services.json` file for Firebase and Google services configuration.
+QPA (abreviatura de "¿Qué Pasa Acá?") es una aplicación social de chats geolocalizados. Permite a los usuarios crear o unirse a salas de conversación ubicadas en el espacio físico real, como restaurantes, plazas o eventos. Si estás cerca, podés chatear con otros en el lugar y compartir opiniones, experiencias o comentarios sobre lo que está ocurriendo.
 
-## Getting Started
+Esta es la versión funcional estable (v1.0.0), conservada como punto de referencia para desarrollo futuro.
 
-1. Obtain your own Firebase project configuration from the [Firebase console](https://console.firebase.google.com/).
-2. Download the `google-services.json` file and place it in the `app/` directory of this project.
-3. The file is ignored by Git, so you must provide it yourself when setting up the project.
+---
+
+## 🚀 Características principales
+
+- 🌍 Mapa interactivo con visualización de salas activas (modo explorador).
+- 📍 Creación de salas basada en la ubicación real del usuario.
+- 🔐 Privacidad: los usuarios pueden usar apodos y elegir mostrar o no su información.
+- 🔔 Notificaciones cuando se crean salas cercanas o ingresan usuarios nuevos.
+- ✏️ Chat en tiempo real con burbujas de mensajes diferenciadas.
+- 🛡️ Restricción de acceso según la ubicación si así lo define el creador de la sala.
+
+---
+
+## 🔧 Configuración del entorno
+
+### 1. Firebase
+
+Este proyecto requiere un archivo `google-services.json` para conectarse con Firebase:
+
+1. Iniciá un proyecto en [Firebase Console](https://console.firebase.google.com/).
+2. Agregá una app Android y descargá el archivo `google-services.json`.
+3. Colocá el archivo en la carpeta `app/`.
+
+> ⚠️ Este archivo está ignorado por Git por seguridad, por lo que debe añadirse manualmente.
+
+### 2. Google Maps API Key
+
+Necesitás una clave de API de Google Maps: AIzaSyAieXEcrI68hemWqD7_8KlWSqjtj6XPfno
+
+- Creá un archivo `local.properties` en la raíz del proyecto con:
+
+El sistema la inyecta automáticamente durante el proceso de compilación.
+
+---
+
+## 📁 Estructura del proyecto (resumen)
+
+app/
+
+screens/
+
+components/
+
+utils/
+
+viewmodel/
+
+MainActivity.kt
+
+FirebaseUtils.kt
+
+MapHelpers.kt
 
 
-The project also needs a Google Maps API key. Configure it by creating a `local.properties` file in the project root with the line `MAPS_API_KEY=YOUR_KEY`. The key is read at build time by the secrets Gradle plugin and injected into `AndroidManifest.xml`.
+---
 
-An example `secrets.defaults.properties` is included with a placeholder value. Replace it with your real key (or provide a `local.properties` file) before building the app.
+## 📦 Estado del proyecto
+
+✔️ **Estable** — Esta versión funciona correctamente y se usa como base de restauración segura.  
+🧪 Para pruebas y nuevas funciones, usar la rama `dev` (si existe) o crear una nueva.
+
+---
+
+## 📄 Licencia
+
+MIT © Jorge Cabrera
+
