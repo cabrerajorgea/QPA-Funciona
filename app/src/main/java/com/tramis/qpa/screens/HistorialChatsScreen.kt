@@ -24,12 +24,17 @@ fun HistorialChatsScreen(
     var activas by remember { mutableStateOf<Set<String>>(emptySet()) }
     var selectedTab by remember { mutableStateOf(0) }
 
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+    val historialFiltrado = historial.filter { (id, data) ->
+        data["creatorId"] != userId
+    }
+
     // Cargar las salas activas y las creadas
     LaunchedEffect(Unit) {
         sharedViewModel.actualizarSalasActivas {
             activas = it
         }
-        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+        userId?.let { uid ->
             sharedViewModel.cargarSalasCreadas(uid)
         }
     }
@@ -56,7 +61,7 @@ fun HistorialChatsScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        val listaActual = if (selectedTab == 0) salasCreadas else historial
+        val listaActual = if (selectedTab == 0) salasCreadas else historialFiltrado
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(listaActual.filter {

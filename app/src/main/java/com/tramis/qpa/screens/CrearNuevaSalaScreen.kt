@@ -47,7 +47,7 @@ fun CrearNuevaSalaScreen(
         OutlinedTextField(
             value = descripcionSala,
             onValueChange = { descripcionSala = it },
-            label = { Text("Breve descripción de lo que se habla acá") },
+            label = { Text("Breve descripción de lo que se hablará acá") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = false,
             minLines = 2

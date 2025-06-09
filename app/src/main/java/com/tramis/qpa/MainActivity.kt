@@ -31,6 +31,7 @@ import com.tramis.qpa.viewmodel.SharedViewModel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.core.view.WindowCompat
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,9 +121,10 @@ fun AppScaffold(navController: NavHostController) {
                 )
             }
             composable("crear") {
+                val user = FirebaseAuth.getInstance().currentUser
                 CrearNuevaSalaScreen(
-                    user = null,
-                    onSalaSeleccionada = { _, _ -> },
+                    user = user,
+                    onSalaSeleccionada = { id, data -> navController.navigate("chat/$id") },
                     onSignOut = {}
                 )
             }

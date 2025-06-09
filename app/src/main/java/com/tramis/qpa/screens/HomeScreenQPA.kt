@@ -1,5 +1,6 @@
 package com.tramis.qpa.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseUser
@@ -70,9 +72,9 @@ fun HomeScreenQPA(
         nombre.contains(searchQuery, ignoreCase = true)
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) {
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { _ ->
         Box(modifier = Modifier.fillMaxSize()) {
-        when (selectedTab) {
+            when (selectedTab) {
                 0 -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         MapaSalasScreen(
@@ -103,30 +105,26 @@ fun HomeScreenQPA(
 
                         Card(
                             modifier = Modifier
-                                .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
-                                .heightIn(max = 300.dp)
-                                .padding(16.dp),
+                                .fillMaxHeight(0.25f)
+                                .padding(8.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+                                containerColor = Color.Black.copy(alpha = 0.4f)
                             ),
-                            shape = MaterialTheme.shapes.large
+                            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
-                            Column(modifier = Modifier.fillMaxWidth()) {
+                            Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
                                 OutlinedTextField(
                                     value = searchQuery,
                                     onValueChange = { searchQuery = it },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    placeholder = { Text("Buscar sala") }
+                                    label = { Text("Buscar sala") },
+                                    modifier = Modifier.fillMaxWidth()
                                 )
-                                LazyColumn(
-                                    state = listState,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp)
-                                ) {
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
                                     items(filteredSalas) { salaPair ->
                                         val (id, data) = salaPair
                                         val nombre = data["name"] as? String ?: "Sin nombre"
@@ -163,6 +161,7 @@ fun HomeScreenQPA(
                         }
                     }
                 }
+
                 1 -> CrearNuevaSalaScreen(
                     user = user,
                     onSalaSeleccionada = { id, data ->
@@ -170,6 +169,7 @@ fun HomeScreenQPA(
                     },
                     onSignOut = onSignOut
                 )
+
                 2 -> Text("Mis chats")
                 3 -> Text("Perfil y ajustes")
             }

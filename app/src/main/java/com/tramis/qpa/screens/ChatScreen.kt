@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.components.*
@@ -58,7 +59,6 @@ fun ChatScreen(
     val centroSala = geo?.let { LatLng(it.latitude, it.longitude) } ?: LatLng(0.0, 0.0)
     val context = LocalContext.current
 
-
     Box(modifier = Modifier.fillMaxSize()) {
         // Mapa de fondo atenuado
         SimpleMapWithUsuarios(
@@ -74,19 +74,48 @@ fun ChatScreen(
         )
 
         Column(modifier = Modifier.fillMaxSize()) {
-            // Top bar
-            TopAppBar(
-                title = {
-                    Text(text = sala["name"] as? String ?: "Sala")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
+            // Encabezado personalizado sin TopAppBar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                IconButton(onClick = {
+                    navController.navigateUp()
+                }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Volver"
+                    )
                 }
-            )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = sala["totem"] as? String ?: "",
+                    fontSize = 28.sp,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = sala["name"] as? String ?: "Sala",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
+            // Marquesina de actividad de sala
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp)
+                    .background(Color.Black.copy(alpha = 0.4f)),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = "Room activity will appear here",
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -125,7 +154,6 @@ fun ChatScreen(
                             onError = { e ->
                                 Toast.makeText(context, "Error al enviar: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
                             }
-
                         )
                     }
                 }) {
