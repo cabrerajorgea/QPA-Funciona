@@ -31,6 +31,7 @@ fun ChatScreen(
     val mensajes = useMensajesListener(salaId)
     val usuarios = useUsuariosEnSalaListener(salaId)
     val sala = useSalaInfo(salaId)
+    val ubicacionActual = getCurrentLocation()
 
     val usuario = FirebaseAuth.getInstance().currentUser
     var mensaje by remember { mutableStateOf(TextFieldValue("")) }
@@ -64,7 +65,8 @@ fun ChatScreen(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.1f)
+                .alpha(0.1f),
+            userLocation = ubicacionActual
         )
 
         Column(modifier = Modifier.fillMaxSize()) {
