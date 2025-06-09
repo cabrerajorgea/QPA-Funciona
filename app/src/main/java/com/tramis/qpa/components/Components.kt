@@ -18,17 +18,35 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.MapProperties
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.tramis.qpa.utils.createEmojiBitmap
+import com.tramis.qpa.utils.rememberDayNightMapProperties
 
 @Composable
-fun SimpleMapWithUsuarios(center: LatLng, puntos: List<LatLng>, modifier: Modifier = Modifier) {
+fun SimpleMapWithUsuarios(
+    center: LatLng,
+    puntos: List<LatLng>,
+    modifier: Modifier = Modifier,
+    userLocation: LatLng? = null
+) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(center, 16f)
     }
 
+    val context = LocalContext.current
+    val mapProperties = rememberDayNightMapProperties()
+
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        properties = mapProperties
     ) {
+        userLocation?.let {
+            val icon = remember { createEmojiBitmap(context, "🦉") }
+            Marker(state = MarkerState(position = it), icon = icon)
+        }
         puntos.forEach {
             Marker(state = MarkerState(position = it))
         }

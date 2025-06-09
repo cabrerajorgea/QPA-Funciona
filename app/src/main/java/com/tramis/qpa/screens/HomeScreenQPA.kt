@@ -86,7 +86,8 @@ fun HomeScreenQPA(
                                     sharedViewModel.agregarSala(id, data)
                                     navController.navigate("chat/$id")
                                 },
-                                sharedViewModel = sharedViewModel
+                                sharedViewModel = sharedViewModel,
+                                userLocation = ubicacionUsuario
                             )
                         }
                         HorizontalDivider()

@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.tramis.qpa.utils.CameraMoveRequest
 import com.tramis.qpa.utils.SimpleMapWithSalas
 import com.tramis.qpa.viewmodel.SharedViewModel
+import com.google.android.gms.maps.model.LatLng
 
 
 
@@ -24,7 +25,8 @@ fun MapaSalasScreen(
     onCerrarTarjeta: () -> Unit,
     onSalaSeleccionada: (String, Map<String, Any>) -> Unit,
     onEntrar: (String, Map<String, Any>) -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    userLocation: LatLng?
 ) {
     var grupoSeleccionado by remember { mutableStateOf<List<Pair<String, Map<String, Any>>>?>(null) }
 
@@ -35,7 +37,8 @@ fun MapaSalasScreen(
             onMarkerClick = { id, data -> onSalaSeleccionada(id, data) },
             onGrupoClick = { _, grupo ->
                 grupoSeleccionado = grupo
-            }
+            },
+            userLocation = userLocation
         )
 
         // Fondo para cerrar tarjeta
