@@ -30,10 +30,15 @@ import com.tramis.qpa.ui.theme.QPATheme
 import com.tramis.qpa.viewmodel.SharedViewModel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.core.view.WindowCompat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Permitir que el contenido use toda el área de la pantalla, incluso detrás de la status bar
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             QPATheme {
                 val navController = rememberNavController()
@@ -50,7 +55,10 @@ fun AppScaffold(navController: NavHostController) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color.Black,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ) {
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry?.destination
 
@@ -65,7 +73,7 @@ fun AppScaffold(navController: NavHostController) {
                     val isSelected = currentDestination?.route == route
                     val animatedScale by animateFloatAsState(if (isSelected) 1.3f else 1f)
                     val animatedColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFF757575)
                     )
 
                     NavigationBarItem(

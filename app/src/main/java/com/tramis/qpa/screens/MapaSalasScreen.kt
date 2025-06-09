@@ -91,12 +91,14 @@ fun MapaSalasScreen(
                             val cant = (data["usuarios"] as? List<*>)?.size ?: 0
                             Button(
                                 onClick = {
-                                    onSalaSeleccionada(id, data)
                                     grupoSeleccionado = null
+                                    onEntrar(id, data)
+
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("🎯 $nombre · $cant usuarios")
+                                val totem = data["totem"] as? String ?: "📍"
+                                Text("$totem $nombre · $cant usuarios")
                             }
                         }
                     }

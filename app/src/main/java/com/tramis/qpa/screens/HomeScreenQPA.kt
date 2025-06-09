@@ -71,8 +71,8 @@ fun HomeScreenQPA(
     }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) {
-        Box(modifier = Modifier.padding(it)) {
-            when (selectedTab) {
+        Box(modifier = Modifier.fillMaxSize()) {
+        when (selectedTab) {
                 0 -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         MapaSalasScreen(
