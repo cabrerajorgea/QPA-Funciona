@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.components.*
@@ -68,10 +69,21 @@ fun ChatScreen(
         )
 
         Column(modifier = Modifier.fillMaxSize()) {
-            // Top bar
+            // Top bar con altura reducida y emoji de la sala
             TopAppBar(
+                modifier = Modifier.height(32.dp),
                 title = {
-                    Text(text = sala["name"] as? String ?: "Sala")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = sala["name"] as? String ?: "Sala",
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        Text(
+                            text = sala["totem"] as? String ?: "",
+                            fontSize = 28.sp,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -81,6 +93,21 @@ fun ChatScreen(
                     }
                 }
             )
+
+            // Área de anuncios / marquee (placeholder)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp)
+                    .background(Color.Black.copy(alpha = 0.4f)),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = "Room activity will appear here",
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
