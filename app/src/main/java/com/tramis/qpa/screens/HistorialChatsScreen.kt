@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.viewmodel.SharedViewModel
 
 @Composable
@@ -21,6 +22,7 @@ fun HistorialChatsScreen(
     sharedViewModel: SharedViewModel
 ) {
     val historial by sharedViewModel.salasAccedidas.collectAsState()
+    val currentUser = FirebaseAuth.getInstance().currentUser
     var textoBusqueda by remember { mutableStateOf("") }
     var activas by remember { mutableStateOf<Set<String>>(emptySet()) }
 
@@ -65,6 +67,15 @@ fun HistorialChatsScreen(
                         Text("👥 $usuarios usuarios | 🧑 $creador")
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            if (currentUser?.uid == creador) {
+                                TextButton(onClick = {
+                                    sharedViewModel.agregarSala(id, data)
+                                    navController.navigate("editar/$id")
+                                }) {
+                                    Text("Edit")
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
                             Button(
                                 onClick = {
                                     navController.navigate("chat/$id")
