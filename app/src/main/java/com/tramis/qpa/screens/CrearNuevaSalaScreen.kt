@@ -22,6 +22,7 @@ fun CrearNuevaSalaScreen(
 ) {
     val context = LocalContext.current
     var nombreSala by remember { mutableStateOf("") }
+    var descripcionSala by remember { mutableStateOf("") }
     var soloLocales by remember { mutableStateOf(true) }
     var soloVisibles by remember { mutableStateOf(true) }
     var totem by remember { mutableStateOf("📍") }
@@ -44,10 +45,21 @@ fun CrearNuevaSalaScreen(
         )
 
         OutlinedTextField(
+            value = descripcionSala,
+            onValueChange = { descripcionSala = it },
+            label = { Text("Breve descripción de lo que se habla acá") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = false,
+            minLines = 2
+        )
+
+        OutlinedTextField(
             value = totem,
             onValueChange = { totem = it },
             label = { Text("Emoji o símbolo de la sala") },
-            modifier = Modifier.fillMaxWidth()
+            supportingText = { Text("Solo 1 emoji") },
+            singleLine = true,
+            modifier = Modifier.width(80.dp)
         )
 
         Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
@@ -57,7 +69,7 @@ fun CrearNuevaSalaScreen(
 
         Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
             Checkbox(checked = soloVisibles, onCheckedChange = { soloVisibles = it })
-            Text("Cualquiera puede explorar")
+            Text("Los que no están acá pueden leer")
         }
 
         Button(
