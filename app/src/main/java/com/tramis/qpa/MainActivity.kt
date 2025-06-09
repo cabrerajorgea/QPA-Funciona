@@ -4,12 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.material.icons.rounded.Forum
+import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
@@ -19,6 +28,8 @@ import com.tramis.qpa.screens.HistorialChatsScreen
 import com.tramis.qpa.screens.HomeScreenQPA
 import com.tramis.qpa.ui.theme.QPATheme
 import com.tramis.qpa.viewmodel.SharedViewModel
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +54,22 @@ fun AppScaffold(navController: NavHostController) {
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry?.destination
 
-                listOf("home" to "🏠", "crear" to "➕", "chatList" to "💬", "perfil" to "👤").forEach { (route, emoji) ->
+                val items = listOf(
+                    "home" to Icons.Rounded.Place,
+                    "crear" to Icons.Rounded.AddCircleOutline,
+                    "chatList" to Icons.Rounded.Forum,
+                    "perfil" to Icons.Rounded.AccountCircle
+                )
+
+                items.forEach { (route, icon) ->
+                    val isSelected = currentDestination?.route == route
+                    val animatedScale by animateFloatAsState(if (isSelected) 1.3f else 1f)
+                    val animatedColor by animateColorAsState(
+                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                    )
+
                     NavigationBarItem(
-                        selected = currentDestination?.route == route,
+                        selected = isSelected,
                         onClick = {
                             navController.navigate(route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -55,8 +79,20 @@ fun AppScaffold(navController: NavHostController) {
                                 restoreState = true
                             }
                         },
-                        label = { Text(emoji) },
-                        icon = {}
+                        icon = {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = route,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .scale(animatedScale),
+                                tint = animatedColor
+                            )
+                        },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color.Transparent
+                        )
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package com.tramis.qpa.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -54,6 +56,8 @@ fun ChatScreen(
 
     val geo = sala["location"] as? GeoPoint
     val centroSala = geo?.let { LatLng(it.latitude, it.longitude) } ?: LatLng(0.0, 0.0)
+    val context = LocalContext.current
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Mapa de fondo atenuado
@@ -118,7 +122,10 @@ fun ChatScreen(
                             senderName = usuario?.displayName ?: "Anónimo",
                             texto = mensaje.text,
                             onSuccess = { mensaje = TextFieldValue("") },
-                            onError = {}
+                            onError = { e ->
+                                Toast.makeText(context, "Error al enviar: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            }
+
                         )
                     }
                 }) {

@@ -17,6 +17,8 @@ import com.google.maps.android.compose.*
 import androidx.compose.ui.Modifier
 import com.google.maps.android.compose.MapProperties
 import com.google.android.gms.maps.model.MapStyleOptions
+import androidx.lifecycle.LifecycleOwner
+
 
 import com.tramis.qpa.utils.CameraMoveRequest
 
@@ -51,6 +53,7 @@ fun rememberDayNightMapProperties(): MapProperties {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var properties by remember { mutableStateOf(MapProperties()) }
+
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _: LifecycleOwner, event ->

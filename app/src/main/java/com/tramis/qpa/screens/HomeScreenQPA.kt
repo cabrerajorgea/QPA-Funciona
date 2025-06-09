@@ -62,7 +62,6 @@ fun HomeScreenQPA(
     }
 
     var searchQuery by remember { mutableStateOf("") }
-
     var selectedSalaId by remember { mutableStateOf<String?>(null) }
     var selectedSalaData by remember { mutableStateOf<Map<String, Any>?>(null) }
     var tarjetaVisible by remember { mutableStateOf(false) }
@@ -71,7 +70,7 @@ fun HomeScreenQPA(
         nombre.contains(searchQuery, ignoreCase = true)
     }
 
-    Scaffold {
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) {
         Box(modifier = Modifier.padding(it)) {
             when (selectedTab) {
                 0 -> {
@@ -104,13 +103,14 @@ fun HomeScreenQPA(
 
                         Card(
                             modifier = Modifier
-                                .align(Alignment.TopCenter)
+                                .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
                                 .heightIn(max = 300.dp)
                                 .padding(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                            )
+                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+                            ),
+                            shape = MaterialTheme.shapes.large
                         ) {
                             Column(modifier = Modifier.fillMaxWidth()) {
                                 OutlinedTextField(
