@@ -1,13 +1,11 @@
 package com.tramis.qpa.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,18 +19,32 @@ fun HistorialChatsScreen(
     sharedViewModel: SharedViewModel
 ) {
     val historial by sharedViewModel.salasAccedidas.collectAsState()
+    val salasCreadas by sharedViewModel.salasCreadas.collectAsState()
     var textoBusqueda by remember { mutableStateOf("") }
     var activas by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var selectedTab by remember { mutableStateOf(0) }
 
-    // Cargar las salas activas
+    // Cargar las salas activas y las creadas
     LaunchedEffect(Unit) {
         sharedViewModel.actualizarSalasActivas {
             activas = it
         }
+        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+            sharedViewModel.cargarSalasCreadas(uid)
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Mis salas accedidas", style = MaterialTheme.typography.headlineSmall)
+        val tabTitles = listOf("Creadas", "Accedidas")
+        TabRow(selectedTabIndex = selectedTab) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTab == index,
+                    onClick = { selectedTab = index },
+                    text = { Text(title) }
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
@@ -44,8 +56,10 @@ fun HistorialChatsScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        val listaActual = if (selectedTab == 0) salasCreadas else historial
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(historial.filter {
+            items(listaActual.filter {
                 val nombre = it.second["name"] as? String ?: ""
                 nombre.contains(textoBusqueda, ignoreCase = true)
             }) { (id, data) ->

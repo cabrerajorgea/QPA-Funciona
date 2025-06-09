@@ -12,6 +12,9 @@ class SharedViewModel : ViewModel() {
     private val _salasAccedidas = MutableStateFlow<List<Pair<String, Map<String, Any>>>>(emptyList())
     val salasAccedidas: StateFlow<List<Pair<String, Map<String, Any>>>> = _salasAccedidas
 
+    private val _salasCreadas = MutableStateFlow<List<Pair<String, Map<String, Any>>>>(emptyList())
+    val salasCreadas: StateFlow<List<Pair<String, Map<String, Any>>>> = _salasCreadas
+
     fun agregarSala(id: String, data: Map<String, Any>) {
         val actual = _salasAccedidas.value.toMutableList()
         if (actual.none { it.first == id }) {
@@ -26,5 +29,18 @@ class SharedViewModel : ViewModel() {
             val activas = snapshot.documents.mapNotNull { it.id }.toSet()
             onComplete(activas)
         }
+    }
+
+    fun cargarSalasCreadas(userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("rooms")
+            .whereEqualTo("creatorId", userId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val creadas = snapshot.documents.mapNotNull { doc ->
+                    doc.data?.let { doc.id to it }
+                }
+                _salasCreadas.value = creadas
+            }
     }
 }
