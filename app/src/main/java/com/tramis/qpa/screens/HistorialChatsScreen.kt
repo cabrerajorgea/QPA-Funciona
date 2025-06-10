@@ -1,9 +1,9 @@
 package com.tramis.qpa.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.runtime.*
@@ -29,7 +29,6 @@ fun HistorialChatsScreen(
         data["creatorId"] != userId
     }
 
-    // Cargar las salas activas y las creadas
     LaunchedEffect(Unit) {
         sharedViewModel.actualizarSalasActivas {
             activas = it
@@ -70,33 +69,34 @@ fun HistorialChatsScreen(
             }) { (id, data) ->
                 val nombre = data["name"] as? String ?: "(Sin nombre)"
                 val creador = data["creatorId"] as? String ?: "Desconocido"
-                val creadorId = data["creatorId"] as? String
                 val usuarios = (data["usuarios"] as? List<*>)?.size ?: 0
                 val activa = activas.contains(id)
+                val totem = data["totem"] as? String ?: "📍"
 
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 6.dp)
-                        .background(if (activa) Color.White else Color.LightGray)
+                        .padding(vertical = 6.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    ),
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("🎯 $nombre", style = MaterialTheme.typography.titleMedium)
+                        Text("$totem $nombre", style = MaterialTheme.typography.titleMedium)
                         Text("👥 $usuarios usuarios | 🧑 $creador")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            if (selectedTab == 0 && creadorId == userId) {
-                                TextButton(onClick = { navController.navigate("editar/$id") }) {
-                                    Text("Edit")
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            if (selectedTab == 0) {
+                                Button(onClick = { navController.navigate("editarSala/$id") }) {
+                                    Text("Editar sala")
                                 }
+                                Spacer(Modifier.width(8.dp))
                             }
                             Button(
-                                onClick = {
-                                    navController.navigate("chat/$id")
-                                },
+                                onClick = { navController.navigate("chat/$id") },
                                 enabled = activa
                             ) {
                                 Text("Entrar")

@@ -165,3 +165,22 @@ fun crearSala(
         .addOnSuccessListener { ref -> onSuccess(ref.id, data) }
         .addOnFailureListener { e -> onError(e) }
 }
+fun editarSala(
+    salaId: String,
+    nombre: String,
+    soloVisibles: Boolean,
+    totem: String,
+    onSuccess: () -> Unit,
+    onError: (Exception) -> Unit
+) {
+    val db = FirebaseFirestore.getInstance()
+    val data = mapOf(
+        "name" to nombre,
+        "soloVisibles" to soloVisibles,
+        "totem" to totem
+    )
+    db.collection("rooms").document(salaId)
+        .update(data)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError(it) }
+}

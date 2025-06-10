@@ -32,6 +32,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.core.view.WindowCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.tramis.qpa.screens.EditarSalaScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,6 +134,7 @@ fun AppScaffold(navController: NavHostController) {
                     navController = navController,
                     sharedViewModel = sharedViewModel
                 )
+
             }
             composable("chat/{salaId}") { backStackEntry ->
                 val salaId = backStackEntry.arguments?.getString("salaId") ?: return@composable
@@ -144,6 +146,10 @@ fun AppScaffold(navController: NavHostController) {
             }
             composable("perfil") {
                 Text("Pantalla de Perfil")
+            }
+            composable("editarSala/{salaId}") { backStackEntry ->
+                val salaId = backStackEntry.arguments?.getString("salaId") ?: return@composable
+                EditarSalaScreen(salaId = salaId, navController = navController)
             }
         }
     }
