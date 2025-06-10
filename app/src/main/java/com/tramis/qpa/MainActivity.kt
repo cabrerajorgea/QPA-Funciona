@@ -26,6 +26,7 @@ import com.tramis.qpa.screens.ChatScreen
 import com.tramis.qpa.screens.CrearNuevaSalaScreen
 import com.tramis.qpa.screens.HistorialChatsScreen
 import com.tramis.qpa.screens.HomeScreenQPA
+import com.tramis.qpa.screens.ProfileScreen
 import com.tramis.qpa.ui.theme.QPATheme
 import com.tramis.qpa.viewmodel.SharedViewModel
 import androidx.compose.animation.animateColorAsState
@@ -143,7 +144,7 @@ fun AppScaffold(navController: NavHostController) {
                 )
             }
             composable("perfil") {
-                Text("Pantalla de Perfil")
+                ProfileScreen(navController)
             }
         }
     }
