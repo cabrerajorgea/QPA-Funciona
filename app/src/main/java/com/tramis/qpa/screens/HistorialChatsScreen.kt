@@ -70,6 +70,7 @@ fun HistorialChatsScreen(
             }) { (id, data) ->
                 val nombre = data["name"] as? String ?: "(Sin nombre)"
                 val creador = data["creatorId"] as? String ?: "Desconocido"
+                val creadorId = data["creatorId"] as? String
                 val usuarios = (data["usuarios"] as? List<*>)?.size ?: 0
                 val activa = activas.contains(id)
 
@@ -83,7 +84,15 @@ fun HistorialChatsScreen(
                         Text("🎯 $nombre", style = MaterialTheme.typography.titleMedium)
                         Text("👥 $usuarios usuarios | 🧑 $creador")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (selectedTab == 0 && creadorId == userId) {
+                                TextButton(onClick = { navController.navigate("editar/$id") }) {
+                                    Text("Edit")
+                                }
+                            }
                             Button(
                                 onClick = {
                                     navController.navigate("chat/$id")
