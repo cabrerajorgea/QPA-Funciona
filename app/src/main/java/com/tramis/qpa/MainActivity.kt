@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
 
         // Permitir que el contenido use toda el área de la pantalla, incluso detrás de la status bar
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.setBackgroundDrawableResource(android.R.color.transparent)
 
         setContent {
             QPATheme {
