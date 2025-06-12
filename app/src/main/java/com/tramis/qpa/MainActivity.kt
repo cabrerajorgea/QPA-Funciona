@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.AddCircleOutline
-import androidx.compose.material.icons.rounded.Forum
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -34,6 +33,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.core.view.WindowCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.screens.EditarSalaScreen
+import androidx.compose.material.icons.rounded.Forum
 
 
 class MainActivity : ComponentActivity() {
@@ -69,7 +69,7 @@ fun AppScaffold(navController: NavHostController) {
 
                 val items = listOf(
                     "home" to Icons.Rounded.Place,
-                    "crear" to Icons.Rounded.AddCircleOutline,
+                    "crear" to Icons.Rounded.Add,
                     "chatList" to Icons.Rounded.Forum,
                     "perfil" to Icons.Rounded.AccountCircle
                 )
