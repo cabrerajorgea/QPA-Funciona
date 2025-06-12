@@ -14,7 +14,7 @@
         <item name="windowSplashScreenBackground">@color/white</item>
 
         <!-- Imagen central (PNG válido o VectorDrawable) -->
-        <item name="windowSplashScreenBrandingImage">@drawable/ic_launcher_owl</item>
+        <item name="windowSplashScreenBrandingImage">@mipmap/ic_launcher_owl</item>
 
         <!-- Tema que toma la app una vez finalizado el splash -->
         <item name="postSplashScreenTheme">@style/Theme.QPA</item>
