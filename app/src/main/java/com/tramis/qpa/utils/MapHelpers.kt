@@ -1,4 +1,3 @@
-
 package com.tramis.qpa.utils
 
 import android.content.Context
@@ -7,9 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
 import com.google.firebase.firestore.GeoPoint
@@ -17,10 +13,8 @@ import com.google.maps.android.compose.*
 import androidx.compose.ui.Modifier
 import com.google.maps.android.compose.MapProperties
 import com.google.android.gms.maps.model.MapStyleOptions
-import androidx.lifecycle.LifecycleOwner
-
-
 import com.tramis.qpa.utils.CameraMoveRequest
+import java.util.*
 
 fun createEmojiBitmap(context: Context, emoji: String, size: Float = 80f): BitmapDescriptor {
     val paint = Paint().apply {
@@ -34,8 +28,8 @@ fun createEmojiBitmap(context: Context, emoji: String, size: Float = 80f): Bitma
     val bounds = Rect()
     paint.getTextBounds(emoji, 0, emoji.length, bounds)
 
-    val bmpWidth = bounds.width() + 40  // más padding
-    val bmpHeight = bounds.height() + 60  // más alto para evitar corte de descendentes
+    val bmpWidth = bounds.width() + 40
+    val bmpHeight = bounds.height() + 60
 
     val bmp = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bmp)
@@ -51,30 +45,17 @@ fun createEmojiBitmap(context: Context, emoji: String, size: Float = 80f): Bitma
 @Composable
 fun rememberDayNightMapProperties(): MapProperties {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    var properties by remember { mutableStateOf(MapProperties()) }
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _: LifecycleOwner, event ->
-            if (event == Lifecycle.Event.ON_RESUME || event == Lifecycle.Event.ON_CREATE) {
-                val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-                val styleRes = if (hour in 6..18) {
-                    com.tramis.qpa.R.raw.map_style_day
-                } else {
-                    com.tramis.qpa.R.raw.map_style_night
-                }
-                val style = MapStyleOptions.loadRawResourceStyle(context, styleRes)
-                properties = MapProperties(mapStyleOptions = style)
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    val styleRes = if (hour in 6..18) {
+        com.tramis.qpa.R.raw.map_style_day
+    } else {
+        com.tramis.qpa.R.raw.map_style_night
     }
 
-    return properties
+    val style = MapStyleOptions.loadRawResourceStyle(context, styleRes)
+    return MapProperties(mapStyleOptions = style)
 }
-
 
 @Composable
 fun SimpleMapWithSalas(

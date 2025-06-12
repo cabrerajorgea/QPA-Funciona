@@ -19,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -132,40 +130,27 @@ fun ProfileScreen(navController: NavController) {
             OutlinedTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                label = { Text("Full Name") },
+                label = { Text("Nombre completo") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = nickname,
                 onValueChange = { nickname = it },
-                label = { Text("Username") },
+                label = { Text("Apodo") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = phone,
-                onValueChange = { input ->
-                    if (input.isEmpty() || input.matches(Regex("\u002B?[0-9]*"))) {
-                        phone = input
-                    }
-                },
-                label = { Text("Phone") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                onValueChange = { phone = it },
+                label = { Text("Teléfono") },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    "\uD83D\uDD14 Notifications: Coming soon. Here you will be able to enable personalized alerts.",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = { saveProfile() }, modifier = Modifier.fillMaxWidth()) {
-                Text("Save Changes")
+                Text("Guardar cambios")
             }
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedButton(
@@ -177,9 +162,8 @@ fun ProfileScreen(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Log Out")
+                Text("Cerrar sesión")
             }
         }
     }
 }
-

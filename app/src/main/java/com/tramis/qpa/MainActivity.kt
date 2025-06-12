@@ -35,6 +35,7 @@ import androidx.core.view.WindowCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.screens.EditarSalaScreen
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
