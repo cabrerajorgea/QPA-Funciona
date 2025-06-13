@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <!-- Tema general de la app -->
-    <style name="Theme.QPA" parent="Theme.Material3.DayNight.NoActionBar">
+<resources>
+    <!-- Usar Theme.MaterialComponents que es más estable -->
+    <style name="Theme.QPA" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/purple_200</item>
+        <item name="colorSecondary">@color/purple_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor">@color/purple_500</item>
     </style>
-
-    <!-- Tema exclusivo para el SplashScreen -->
-    <style name="Theme.QPA.Splash" parent="Theme.SplashScreen">
-        <!-- Fondo de pantalla inicial -->
-        <item name="windowSplashScreenBackground">@color/white</item>
-
-        <!-- Imagen central (PNG válido o VectorDrawable) -->
-        <item name="windowSplashScreenBrandingImage">@mipmap/ic_launcher_owl</item>
-
-        <!-- Tema que toma la app una vez finalizado el splash -->
-        <item name="postSplashScreenTheme">@style/Theme.QPA</item>
-    </style>
-
 </resources>

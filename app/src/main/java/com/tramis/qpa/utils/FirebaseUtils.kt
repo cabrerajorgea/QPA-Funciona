@@ -52,6 +52,18 @@ fun getCurrentLocation(): LatLng? {
     return location
 }
 
+@SuppressLint("MissingPermission")
+suspend fun fetchCurrentLocation(context: Context): LatLng? {
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    val loc = fusedLocationClient
+        .getCurrentLocation(
+            com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+            null
+        )
+        .await()
+    return loc?.let { LatLng(it.latitude, it.longitude) }
+}
+
 @Composable
 fun useSalasListener(): List<Pair<String, Map<String, Any>>> {
     val salas = remember { mutableStateListOf<Pair<String, Map<String, Any>>>() }

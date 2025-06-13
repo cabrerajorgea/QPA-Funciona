@@ -33,7 +33,16 @@ import java.io.ByteArrayOutputStream
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
-    val user = FirebaseAuth.getInstance().currentUser ?: return
+    val user = FirebaseAuth.getInstance().currentUser
+    if (user == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No has iniciado sesión")
+        }
+        return
+    }
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance()
