@@ -11,8 +11,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseUser
+import com.google.android.gms.maps.model.LatLng
 import com.tramis.qpa.utils.crearSala
-import com.tramis.qpa.utils.getCurrentLocation
+import com.tramis.qpa.utils.fetchCurrentLocation
 
 @Composable
 fun CrearNuevaSalaScreen(
@@ -27,7 +28,10 @@ fun CrearNuevaSalaScreen(
     var soloVisibles by remember { mutableStateOf(true) }
     var totem by remember { mutableStateOf("📍") }
 
-    val ubicacionActual = getCurrentLocation()
+    var ubicacionActual by remember { mutableStateOf<LatLng?>(null) }
+    LaunchedEffect(Unit) {
+        ubicacionActual = fetchCurrentLocation(context)
+    }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -93,7 +97,8 @@ fun CrearNuevaSalaScreen(
                     Toast.makeText(context, "Ubicación o usuario no disponible", Toast.LENGTH_SHORT).show()
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = ubicacionActual != null && user != null
         ) {
             Text("Crear sala")
         }
