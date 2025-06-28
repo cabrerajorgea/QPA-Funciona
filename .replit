@@ -1,0 +1,6 @@
+run = "echo \"Este proyecto es una app Android y debe compilarse con Android Studio.\""
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "echo \"Este proyecto es una app Android y debe compilarse con Android Studio.\""]
