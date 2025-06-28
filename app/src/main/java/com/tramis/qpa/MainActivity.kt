@@ -26,8 +26,10 @@ import com.tramis.qpa.screens.CrearNuevaSalaScreen
 import com.tramis.qpa.screens.HistorialChatsScreen
 import com.tramis.qpa.screens.HomeScreenQPA
 import com.tramis.qpa.screens.ProfileScreen
+import com.tramis.qpa.screens.LoginScreen
 import com.tramis.qpa.ui.theme.QPATheme
 import com.tramis.qpa.viewmodel.SharedViewModel
+import com.tramis.qpa.viewmodel.SessionViewModel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.core.view.WindowCompat
@@ -45,6 +47,75 @@ class MainActivity : ComponentActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
         setContent {
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        setContent {
+            QPATheme {
+                val navController = rememberNavController()
+                val sharedViewModel: SharedViewModel = viewModel()
+                val sessionViewModel: SessionViewModel = viewModel()
+                val currentUser by sessionViewModel.currentUser.collectAsState()
+                
+                NavHost(
+                    navController = navController,
+                    startDestination = if (currentUser != null) "home" else "login"
+                ) {
+                    composable("login") {
+                        LoginScreen(
+                            navController = navController,
+                            onSignInSuccess = {
+                                navController.navigate("home") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+                    
+                    composable("home") {
+                        HomeScreenQPA(
+                            user = currentUser,
+                            navController = navController,
+                            onSignOut = {
+                                sessionViewModel.signOut()
+                                navController.navigate("login") {
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            },
+                            sharedViewModel = sharedViewModel
+                        )
+                    }
+                    
+                    composable("chat/{roomId}") { backStackEntry ->
+                        val roomId = backStackEntry.arguments?.getString("roomId") ?: ""
+                        ChatScreen(
+                            roomId = roomId,
+                            navController = navController,
+                            sharedViewModel = sharedViewModel
+                        )
+                    }
+                    
+                    composable("profile") {
+                        ProfileScreen(
+                            navController = navController
+                        )
+                    }
+                    
+                    composable("historial") {
+                        HistorialChatsScreen(
+                            navController = navController,
+                            sharedViewModel = sharedViewModel
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
             QPATheme {
                 val navController = rememberNavController()
                 AppScaffold(navController)
