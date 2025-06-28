@@ -170,7 +170,10 @@ fun HomeScreenQPA(
                     onSignOut = onSignOut
                 )
 
-                2 -> Text("Mis chats")
+                2 -> HistorialChatsScreen(
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
+                )
                 3 -> Text("Perfil y ajustes")
             }
         }
