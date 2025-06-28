@@ -127,9 +127,10 @@ fun AppScaffold(navController: NavHostController) {
             composable("crear") {
                 val user = FirebaseAuth.getInstance().currentUser
                 CrearNuevaSalaScreen(
-                    user = user,
+                    currentUser = user,
                     onSalaSeleccionada = { id, data -> navController.navigate("chat/$id") },
-                    onSignOut = {}
+                    sessionViewModel = sharedViewModel,
+                    sharedViewModel = sharedViewModel
                 )
             }
             composable("chatList") {

@@ -163,11 +163,12 @@ fun HomeScreenQPA(
                 }
 
                 1 -> CrearNuevaSalaScreen(
-                    user = user,
+                    currentUser = user,
                     onSalaSeleccionada = { id, data ->
                         navController.navigate("chat/$id")
                     },
-                    onSignOut = onSignOut
+                    sessionViewModel = sharedViewModel,
+                    sharedViewModel = sharedViewModel
                 )
 
                 2 -> HistorialChatsScreen(
