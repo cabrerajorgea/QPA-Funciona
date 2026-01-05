@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,8 +22,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.core.view.WindowCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.tramis.qpa.screens.ChatScreen
 import com.tramis.qpa.screens.CrearNuevaSalaScreen
+import com.tramis.qpa.screens.EditarSalaScreen
 import com.tramis.qpa.screens.HistorialChatsScreen
 import com.tramis.qpa.screens.HomeScreenQPA
 import com.tramis.qpa.screens.ProfileScreen
@@ -30,13 +36,6 @@ import com.tramis.qpa.screens.LoginScreen
 import com.tramis.qpa.ui.theme.QPATheme
 import com.tramis.qpa.viewmodel.SharedViewModel
 import com.tramis.qpa.viewmodel.SessionViewModel
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.core.view.WindowCompat
-import com.google.firebase.auth.FirebaseAuth
-import com.tramis.qpa.screens.EditarSalaScreen
-import androidx.compose.material.icons.rounded.Forum
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,85 +46,116 @@ class MainActivity : ComponentActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
         setContent {
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        
-        setContent {
             QPATheme {
                 val navController = rememberNavController()
-                val sharedViewModel: SharedViewModel = viewModel()
                 val sessionViewModel: SessionViewModel = viewModel()
                 val currentUser by sessionViewModel.currentUser.collectAsState()
-                
-                NavHost(
-                    navController = navController,
-                    startDestination = if (currentUser != null) "home" else "login"
-                ) {
-                    composable("login") {
-                        LoginScreen(
-                            navController = navController,
-                            onSignInSuccess = {
-                                navController.navigate("home") {
-                                    popUpTo("login") { inclusive = true }
+
+                if (currentUser == null) {
+                    LoginScreen(
+                        navController = navController,
+                        onSignInSuccess = {
+                            // navigation to home is handled by switching the content since we are not using a navhost for login/home switch at root level in this version?
+                            // Wait, looking at the AppScaffold logic, it acts as the "Home" authenticated structure.
+                            // The original bad file had conflicting logic: one had a root NavHost with "login" and "home", 
+                            // the other (AppScaffold) assumed it IS the structure.
+                            
+                            // Let's look at AppScaffold again. It has a bottom bar.
+                            // Bottom bar apps usually shouldn't show the bottom bar on Login.
+                            
+                            // A common pattern is: 
+                            // RootNavHost -> Login
+                            //             -> AppScaffold (which has its own inner NavHost for tabs)
+                            
+                            // OR, the AppScaffold calculates visibility.
+                        }
+                    )
+                    // The "duplicate" code had a "Root" NavHost logic.
+                    // Let's implement that Root logic to wrap AppScaffold.
+                    
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (currentUser != null) "app_scaffold" else "login"
+                    ) {
+                        composable("login") {
+                            LoginScreen(
+                                navController = navController,
+                                onSignInSuccess = {
+                                    navController.navigate("app_scaffold") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
+                        
+                        composable("app_scaffold") {
+                             // We need a NEW navController for inside the scaffold if we want independent back stack, 
+                             // OR we use the same one but that gets messy with bottom tabs.
+                             // The AppScaffold takes a navController. 
+                             // If we pass the root one, the bottom bar navigation might conflict with root navigation.
+                             
+                             // Let's stick effectively to what the "Duplicate" code was trying to do in the first block, 
+                             // but properly integrated.
+                             
+                             val contentNavController = rememberNavController()
+                             AppScaffold(contentNavController)
+                        }
                     }
+                } else {
+                    // Optimized: If user is logged in, show AppScaffold directly? 
+                    // No, we need navigation to handle potential logout.
+                    // But for now let's use the layout that seemed most "advanced" in the file which was AppScaffold.
                     
-                    composable("home") {
-                        HomeScreenQPA(
-                            user = currentUser,
-                            navController = navController,
-                            onSignOut = {
-                                sessionViewModel.signOut()
-                                navController.navigate("login") {
-                                    popUpTo("home") { inclusive = true }
-                                }
-                            },
-                            sharedViewModel = sharedViewModel
-                        )
-                    }
+                    // Actually, looking at lines 63-113 of the original file, it had a simpler NavHost without bottom bar integration for all screens.
+                    // But lines 127-231 (AppScaffold) defined a rich bottom bar.
+                    // The AppScaffold is definitely the intended UI.
                     
-                    composable("chat/{roomId}") { backStackEntry ->
-                        val roomId = backStackEntry.arguments?.getString("roomId") ?: ""
-                        ChatScreen(
-                            roomId = roomId,
-                            navController = navController,
-                            sharedViewModel = sharedViewModel
-                        )
-                    }
+                    // Let's construct a Main that toggles between Login and App.
                     
-                    composable("profile") {
-                        ProfileScreen(
-                            navController = navController
-                        )
-                    }
-                    
-                    composable("historial") {
-                        HistorialChatsScreen(
-                            navController = navController,
-                            sharedViewModel = sharedViewModel
-                        )
-                    }
+                   RootNavigation()
                 }
             }
         }
     }
 }
 
-            QPATheme {
-                val navController = rememberNavController()
-                AppScaffold(navController)
-            }
+@Composable
+fun RootNavigation() {
+    val navController = rememberNavController()
+    val sessionViewModel: SessionViewModel = viewModel()
+    val currentUser by sessionViewModel.currentUser.collectAsState()
+    
+    NavHost(
+        navController = navController,
+        startDestination = if (currentUser != null) "main" else "login"
+    ) {
+        composable("login") {
+            LoginScreen(
+                navController = navController,
+                onSignInSuccess = {
+                     navController.navigate("main") {
+                         popUpTo("login") { inclusive = true }
+                     }
+                }
+            )
+        }
+        composable("main") {
+            // Inside "main", we want the bottom bar navigation.
+            // We should create a separate NavHostController for the inner navigation
+            // so specifically tab switching doesn't mess with the root "login/logout" history.
+            val homeNavController = rememberNavController()
+            AppScaffold(homeNavController, onSignOut = {
+                 sessionViewModel.signOut()
+                 navController.navigate("login") {
+                     popUpTo("main") { inclusive = true }
+                 }
+            })
         }
     }
 }
 
 @Composable
-fun AppScaffold(navController: NavHostController) {
+fun AppScaffold(navController: NavHostController, onSignOut: () -> Unit) {
     val activity = LocalContext.current as ComponentActivity
     val sharedViewModel: SharedViewModel = viewModel(viewModelStoreOwner = activity)
 
@@ -147,9 +177,10 @@ fun AppScaffold(navController: NavHostController) {
 
                 items.forEach { (route, icon) ->
                     val isSelected = currentDestination?.route == route
-                    val animatedScale by animateFloatAsState(if (isSelected) 1.3f else 1f)
+                    val animatedScale by animateFloatAsState(if (isSelected) 1.3f else 1f, label = "scale")
                     val animatedColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFF757575)
+                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFF757575),
+                        label = "color"
                     )
 
                     NavigationBarItem(
@@ -191,7 +222,7 @@ fun AppScaffold(navController: NavHostController) {
                 HomeScreenQPA(
                     user = null,
                     navController = navController,
-                    onSignOut = {},
+                    onSignOut = onSignOut,
                     sharedViewModel = sharedViewModel
                 )
             }
